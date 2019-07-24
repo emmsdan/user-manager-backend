@@ -1,0 +1,19 @@
+{
+  "addons": [
+
+  ],
+  "buildpacks": [
+
+  ],
+  "env": {
+    "": {
+      "generator": "secret"
+    }
+  },
+  "formation": {
+  },
+  "name": "user-manager-backend",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
