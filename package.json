@@ -1,0 +1,32 @@
+{
+  "name": "user-manager-backend",
+  "version": "1.0.0",
+  "description": "user authorization and information management app",
+  "main": "build/init.js",
+  "repository": "https://github.com/emmsdan/user-manager-backend.git",
+  "author": "EmmsDan <ecomje@gmail.com>)",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "rm -rf ./build/ && tsc",
+    "lint": "tslint --project \"tsconfig.json\"",
+    "start": "node build/init.js",
+    "start-dev": "nodemon --config \"./util/nodemon.json\"",
+    "test": "nodemon --config \"./util/nodemon.test.json\""
+  },
+  "dependencies": {
+    "@overnightjs/core": "^1.6.9",
+    "@overnightjs/logger": "^1.1.9",
+    "body-parser": "^1.19.0",
+    "cross-env": "^5.2.0",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/node": "^12.6.8"
+  }
+}
