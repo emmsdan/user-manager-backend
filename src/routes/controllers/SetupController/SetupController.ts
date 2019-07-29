@@ -4,6 +4,7 @@ import { Logger } from '@overnightjs/logger';
 import { User } from '../../../db/models/User';
 import { getRepository, createConnection, getConnection } from 'typeorm';
 import { OK } from 'http-status-codes';
+import ResponseHandler from '../../../shared/ResponseHandler';
 
 @Controller('api')
 export default class SetupController {
@@ -20,9 +21,7 @@ export default class SetupController {
     const userRepository = getRepository(User);
     const user = await userRepository.find();
     await userRepository.save(user);
-    res.status(200).json({
-      message: SetupController.SUCCESS_MSG,
-      user,
-    });
+    // tslint:disable-next-line: no-unused-expression
+    new ResponseHandler(res, 1401, SetupController.SUCCESS_MSG);
   }
 }

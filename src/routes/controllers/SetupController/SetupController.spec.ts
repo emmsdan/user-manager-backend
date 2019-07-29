@@ -4,6 +4,7 @@ import { Logger } from '@overnightjs/logger';
 import TestServer from '../../../server';
 import SetupController from './SetupController';
 import { createConnection, Connection } from 'typeorm';
+import { getEnv } from '../../../shared/helpers';
 
 describe('SetupController Tests', () => {
   let httpAgent: SuperTest<Test>;

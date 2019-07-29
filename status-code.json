@@ -1,0 +1,80 @@
+{ 
+    "1000": {
+      "type": "error",
+      "message": "App Server Error, please contact the admin",
+      "statusCode": "521"
+    },
+    "1001": {
+      "type": "error",
+      "message": "Missing Headers",
+      "statusCode": "417"
+    },
+    "1003": "Invalid offset or limit",
+    "1004": "Invalid Locale",
+    "1005": "Invalid Timezone",
+    "1006":  {
+      "type": "error",
+      "message": "You exceeded the limit of requests per minute, Please try again after sometime.",
+      "statusCode": "509"
+    },
+
+    "1101": {
+      "type": "error",
+      "message": "You are Unauthorized.",
+      "statusCode": "401"
+    },
+    "1102": {
+      "type": "error",
+      "message": "You do not have the necessary permissions to access this content.",
+      "statusCode": "403"
+    },
+    "1103": {
+      "type": "error",
+      "message": "Unprocessable Entity",
+      "statusCode": "422"
+    },
+    "1105": "Not found",
+
+    "1201": {
+      "type": "error",
+      "message": "Your session is expired, please login again",
+      "statusCode": "440"
+    },
+    "1205": {
+      "type": "error",
+      "message": "You are Unauthorized, Please login",
+      "statusCode": "401"
+    },
+    "1206": {
+      "type": "error",
+      "message": "You are Unauthorized, Please login",
+      "statusCode": "401"
+    },
+    "1207": "Authentication Error, User Not found",
+
+    "1301": "Invalid Credentials",
+
+    "1310": "Your request is invalid or your request time is over, please try again.",
+    "1311": "You are not authorized to access this app",
+
+    "1312": "An issue in the Active Directory Service, please contat the Administrator",
+
+    "1401": {
+      "type": "success",
+      "message": "server controller is runnint well",
+      "statusCode": "200"
+    },
+    "1402": {
+      "type": "success",
+      "message": "Account Created.",
+      "statusCode": "201"
+    },
+
+    "types": {
+      "# 14XX Success": "1401-1409",
+      "# 13XX Session Errors": "1301-1322",
+      "# 12XX : Auth Erorrs": "1201-1206",
+      "# 11XX : Http Errors": "1101-1105",
+      "# 10XX : Main App Errors": "1001-1006"
+    }
+}
