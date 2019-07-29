@@ -1,0 +1,28 @@
+import { Request, Response } from 'express';
+import { Controller, Get } from '@overnightjs/core';
+import { Logger } from '@overnightjs/logger';
+import { User } from '../../../db/models/User';
+import { getRepository, createConnection, getConnection } from 'typeorm';
+import { OK } from 'http-status-codes';
+
+@Controller('api')
+export default class SetupController {
+  public static SUCCESS_MSG = 'server controller is runnint well';
+  private readonly logger: Logger;
+  // private connection;
+  constructor() {
+    // this.connection = await createConnection();
+    this.logger = new Logger();
+  }
+
+  @Get('/')
+  private async getMessage(req: Request, res: Response) {
+    const userRepository = getRepository(User);
+    const user = await userRepository.find();
+    await userRepository.save(user);
+    res.status(200).json({
+      message: SetupController.SUCCESS_MSG,
+      user,
+    });
+  }
+}
