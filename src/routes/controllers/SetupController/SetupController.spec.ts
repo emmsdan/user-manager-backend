@@ -3,28 +3,34 @@ import { SuperTest, Test, agent } from 'supertest';
 import { Logger } from '@overnightjs/logger';
 import TestServer from '../../../server';
 import SetupController from './SetupController';
+import { createConnection, Connection } from 'typeorm';
 
 describe('SetupController Tests', () => {
   let httpAgent: SuperTest<Test>;
-
-  beforeAll(done => {
-    const server = new TestServer();
-    httpAgent = agent(server.getExpressInstance());
+  let server: TestServer;
+  let mockConnection: Connection;
+  beforeAll(async done => {
+    server = new TestServer();
+    httpAgent = await agent(server.getExpressInstance());
+    mockConnection = await createConnection();
     done();
   });
 
-  describe('API: "/api/:name"', () => {
+  describe('API: "/api/"', () => {
     const { SUCCESS_MSG } = SetupController;
 
-    it(`should  message "${SUCCESS_MSG}" and a status code of "${OK}"`, done => {
-      httpAgent.get(`/api/`).end((err, res) => {
-        if (err) {
-          Logger.Err(err, true);
-        }
-        expect(res.status).toBe(OK);
-        expect(res.body.message).toBe(SUCCESS_MSG);
-        done();
-      });
+    test(`should startup api server`, async done => {
+      const response = await httpAgent.get(`/api/?sadad`);
+      expect(response.status).toBe(OK);
+      expect(response.body.message).toBe(SUCCESS_MSG);
+      done();
     });
+  });
+
+  test('should start server on a different port', async done => {
+    await mockConnection.close();
+    await server.start(1929);
+    expect(server.isStarted).toBeTruthy();
+    done();
   });
 });

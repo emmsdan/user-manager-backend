@@ -1,7 +1,4 @@
 {
   "html.format.endWithNewline": true,
   "javascript.format.enable": false,
-  "javascript.preferences.quoteStyle": "single",
-  "tsimporter.doubleQuotes": false,
-  "prettier.singleQuote": true,
 }

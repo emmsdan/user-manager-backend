@@ -4,6 +4,7 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
     "allowJs": true,
     "importHelpers": true,
     "module": "commonjs",
@@ -22,7 +23,7 @@
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts", "util/helpers.ts"
   ],
   "exclude": [
     "node_modules",

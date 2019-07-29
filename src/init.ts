@@ -1,24 +1,13 @@
 import InitServer from './server';
 import * as path from 'path';
-import { LoggerModes } from '@overnightjs/logger';
+import { LoggerModes, Logger } from '@overnightjs/logger';
 import { unlinkSync } from 'fs';
 
 const server = new InitServer();
 
-// Set the
-const logFilePath = path.join(__dirname, '../logs/errors.log');
-
+const logFilePath = `../logs/${new Date().getTime()}-api-error.log`;
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File;
-process.env.OVERNIGHT_LOGGER_RM_TIMESTAMP = 'TRUE';
-process.env.OVERNIGHT_LOGGER_FILEPATH = logFilePath;
+process.env.OVERNIGHT_LOGGER_FILEPATH = path.join(__dirname, logFilePath);
 
-server.start(4321);
-
-// Remove current log file if it exists
-(function removeFile() {
-  try {
-    unlinkSync(logFilePath);
-  } catch (e) {
-    return;
-  }
-})();
+server.start(Number(process.env.PORT) || 4321);
+export default server;
