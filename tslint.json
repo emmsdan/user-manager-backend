@@ -5,7 +5,7 @@
     "object-literal-sort-keys": false,
     "ordered-imports": false,
     "quotemark": [true, "single"],
-    "no-consecutive-blank-lines": false,
+    "no-consecutive-blank-lines": true,
     "max-line-length": {
       "options": [100]
     },
@@ -18,7 +18,8 @@
     "indent":false,
     "prefer-template":true,
     "no-redundant-jsdoc":true,
-    "jsdoc-format": true
+    "jsdoc-format": true,
+    "triple-equals": true
   },
   "linterOptions": {
     "exclude": [

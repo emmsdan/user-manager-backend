@@ -5,7 +5,7 @@ import { unlinkSync } from 'fs';
 
 const server = new InitServer();
 
-// Set the 
+// Set the
 const logFilePath = path.join(__dirname, '../logs/errors.log');
 
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File;
@@ -17,6 +17,8 @@ server.start(4321);
 // Remove current log file if it exists
 (function removeFile() {
   try {
-      unlinkSync(logFilePath);
-  } catch (e) { return; }
+    unlinkSync(logFilePath);
+  } catch (e) {
+    return;
+  }
 })();
