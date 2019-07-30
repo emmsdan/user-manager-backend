@@ -9,8 +9,9 @@
   "private": false,
   "scripts": {
     "build-nobuild": "'rm -rf ./build/ && tsc'",
+    "docker": "docker build --tag=user-manager-backend .",
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "ts-node src/init.ts",
+    "start": "npm run start-dev",
     "start-dev": "nodemon --config \"./util/nodemon.json\"",
     "test": "jest",
     "test:watch": "jest --watch",
