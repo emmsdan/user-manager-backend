@@ -32,6 +32,7 @@ class InitServer extends Server {
     return await createConnection().then(async () => {
       if (!this.isStarted) {
         const liveserver = await this.app.listen(port);
+        Logger.Imp(this.SERVER_STARTED + port);
         this.isStarted = true;
       }
     });
