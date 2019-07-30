@@ -14,7 +14,7 @@
     "start-dev": "nodemon --config \"./util/nodemon.json\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "ts-node src/setup-database.ts && jest --coverage",
+    "test:cov": "ts-node src/init.ts && jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
