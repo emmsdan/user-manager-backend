@@ -16,6 +16,12 @@ describe('SetupController Tests', () => {
     mockConnection = await createConnection();
     done();
   });
+  test('should start server on a different port', async done => {
+    await mockConnection.close();
+    await server.start(1929);
+    expect(server.isStarted).toBeTruthy();
+    done();
+  });
 
   describe('API: "/api/"', () => {
     const { SUCCESS_MSG } = SetupController;
@@ -26,12 +32,5 @@ describe('SetupController Tests', () => {
       expect(response.body.message).toBe(SUCCESS_MSG);
       done();
     });
-  });
-
-  test('should start server on a different port', async done => {
-    await mockConnection.close();
-    await server.start(1929);
-    expect(server.isStarted).toBeTruthy();
-    done();
   });
 });
