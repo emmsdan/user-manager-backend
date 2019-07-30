@@ -18,10 +18,10 @@ export default class SetupController {
 
   @Get('/')
   private async getMessage(req: Request, res: Response) {
-    const userRepository = getRepository(User);
+    const userRepository = await getRepository(User);
     const user = await userRepository.find();
     await userRepository.save(user);
     // tslint:disable-next-line: no-unused-expression
-    new ResponseHandler(res, 1401, SetupController.SUCCESS_MSG);
+    new ResponseHandler(res, 1401, user);
   }
 }
