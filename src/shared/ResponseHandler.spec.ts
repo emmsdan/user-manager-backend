@@ -14,12 +14,12 @@ describe('RESPONSE HANDLER Tests', () => {
       };
     }),
   };
+  const response = new ResponseHandler(res, 1000, {
+    ...payload,
+    type: 'error',
+  });
 
-  it('should return error response', done => {
-    const response = new ResponseHandler(res, 1000, {
-      ...payload,
-      type: 'error',
-    });
+  it('should return error response', (done) => {
     const resp = response.error(payload, {});
     expect(resp).toHaveProperty('username');
     expect(resp).toHaveProperty('error');
@@ -27,11 +27,7 @@ describe('RESPONSE HANDLER Tests', () => {
     done();
   });
 
-  it('should return error response', done => {
-    const response = new ResponseHandler(res, 1000, {
-      ...payload,
-      type: 'error',
-    });
+  it('should return error response', (done) => {
     const resp = response.success(payload, {});
     expect(resp).toHaveProperty('username');
     expect(resp).toHaveProperty('data');
