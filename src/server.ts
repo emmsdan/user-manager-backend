@@ -29,11 +29,13 @@ class InitServer extends Server {
   }
 
   public async start(port: number): Promise<any> {
-    await createConnection();
-    if (!this.isStarted) {
-      const liveserver = await this.app.listen(port);
-      this.isStarted = true;
-    }
+    return await createConnection().then(async () => {
+      if (!this.isStarted) {
+        const liveserver = await this.app.listen(port);
+        Logger.Imp(this.SERVER_STARTED + port);
+        this.isStarted = true;
+      }
+    });
   }
 
   public getExpressInstance(): Application {
