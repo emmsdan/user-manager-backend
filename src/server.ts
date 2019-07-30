@@ -29,7 +29,7 @@ class InitServer extends Server {
   }
 
   public async start(port: number): Promise<any> {
-    return createConnection().then(async () => {
+    return await createConnection().then(async () => {
       if (!this.isStarted) {
         const liveserver = await this.app.listen(port);
         this.isStarted = true;
