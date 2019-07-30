@@ -20,18 +20,17 @@ describe('RESPONSE HANDLER Tests', () => {
   });
 
   it('should return error response', (done) => {
-    const resp = response.error(payload, {});
-    expect(resp).toHaveProperty('username');
-    expect(resp).toHaveProperty('error');
-    expect(resp).toMatchObject(payload);
+    const error = response.error(payload, {});
+    expect(error).toHaveProperty('error');
+    expect(error).toMatchObject(payload);
     done();
   });
 
   it('should return error response', (done) => {
-    const resp = response.success(payload, {});
-    expect(resp).toHaveProperty('username');
-    expect(resp).toHaveProperty('data');
-    expect(resp).toMatchObject(payload);
+    const success = response.success(payload, { res });
+    expect(success).toHaveProperty('username');
+    expect(success).toHaveProperty('data');
+    expect(success).toMatchObject(payload);
     done();
   });
 });
