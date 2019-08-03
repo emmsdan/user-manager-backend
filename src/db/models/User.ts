@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   public id: number;
 
   @Column({
@@ -14,6 +14,9 @@ export class User {
     nullable: true,
   })
   public lastName: string;
+
+  @Column({ unique: true })
+  public email: string;
 
   @Column({ default: false })
   public isActive: boolean;

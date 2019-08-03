@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
+import SetupController from './SetupController/SetupController';
+import AuthenticationController from './AuthenticationController/AuthenticationController';
 dotenv.config();
 
-export * from './SetupController/SetupController';
+export { SetupController, AuthenticationController };

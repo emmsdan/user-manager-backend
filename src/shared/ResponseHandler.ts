@@ -12,11 +12,11 @@ export default class ResponseHandler {
   constructor(res: any, status: number, payload: {}) {
     const response = this.statusLibrary()[status];
     if (response.type !== 'error') {
-      return res
-        .status(response.statusCode)
-        .json(this.success(response, payload));
+      res.status(response.statusCode).json(this.success(response, payload));
+      return;
     }
-    return res.status(response.statusCode).json(this.error(response, payload));
+    res.status(response.statusCode).json(this.error(response, payload));
+    return;
   }
 
   /**
