@@ -9,5 +9,5 @@ const logFilePath = `../logs/${new Date().getTime()}-api-error.log`;
 process.env.OVERNIGHT_LOGGER_MODE = LoggerModes.File;
 process.env.OVERNIGHT_LOGGER_FILEPATH = path.join(__dirname, logFilePath);
 
-server.start(Number(process.env.PORT) || 4321);
+server.start(Number(process.env.PORT) || 9876);
 export default server;

@@ -3,7 +3,7 @@ import { validate } from 'class-validator';
 import ResponseHandler from './ResponseHandler';
 import { Logger } from '@overnightjs/logger';
 import { Response, Request } from 'express';
-import { IDynamicObject } from './interfaces/interfaces';
+import { IDynamicObject } from '../interfaces/interfaces';
 
 /**
  * getEnv
@@ -43,26 +43,6 @@ export function schema(schemaData: any) {
   };
 }
 
-/**
- * inputValidator()
- * @description used to validate incoming input requests
- * @param Schema validation class/schema
- * @param response express response object
- * @param request express request object
- */
-export async function inputValidator(schema: any, response: any, request: any) {
-  const serializeSchema = new schema();
-  Object.keys(request.body).forEach((fields) => {
-    serializeSchema[fields] = request.body[fields];
-  });
-  const validationResponse = await validate(serializeSchema, {
-    validationError: { target: false },
-  });
-  if (validationResponse) {
-    return new ResponseHandler(response, 1301, validationResponse);
-  }
-}
-
 function formatValidationError(errors: any) {
   const format = errors.map((error: any) => {
     const list: IDynamicObject = {};
@@ -71,3 +51,10 @@ function formatValidationError(errors: any) {
   });
   return format;
 }
+
+export const columnTransformer = {
+  from: (value?: string | null) =>
+  value === undefined || value === null ? value : value.toLocaleLowerCase(),
+  to: (value?: string | null) =>
+  value === undefined || value === null ? value : value.toLocaleLowerCase(),
+};

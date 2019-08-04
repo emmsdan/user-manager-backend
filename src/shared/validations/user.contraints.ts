@@ -13,13 +13,9 @@ export class IsUserAlreadyExistConstraint
   private user = getRepository(User);
 
   public validate(email: string, args: ValidationArguments) {
-    return this.user
-      .find({ where: { email: email.toLocaleLowerCase() } })
-      .then((user) => {
-        if (user && user.length > 0) {
-          return false;
-        }
-        return true;
-      });
+    email = email && email.toLocaleLowerCase();
+    return this.user.find({ where: { email } }).then((user) => {
+      return !(user && user.length > 0);
+    });
   }
 }

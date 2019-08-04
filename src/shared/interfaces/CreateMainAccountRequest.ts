@@ -1,11 +1,6 @@
 import { IsEmail, IsEnum, IsAlpha, IsNotEmpty } from 'class-validator';
 import { IsUserAlreadyExist } from '../validations/user.validation';
-
-export enum Roles {
-  Developer,
-  SuperAdmin,
-  Modirator,
-}
+import { UserRole } from '../constants';
 
 export class CreateMainAccount {
   @IsAlpha()
@@ -24,8 +19,8 @@ export class CreateMainAccount {
   public email: string;
 
   @IsNotEmpty()
-  @IsEnum(Roles)
-  public role: Roles;
+  @IsEnum(UserRole)
+  public role: UserRole;
 }
 
 // tslint:disable-next-line: max-classes-per-file

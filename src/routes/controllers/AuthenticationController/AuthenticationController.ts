@@ -2,36 +2,55 @@ import { Request, Response } from 'express';
 import { Controller, Get, Post, Middleware } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { User } from '../../../db/models/User';
-import { getRepository, createConnection, getConnection } from 'typeorm';
-import { OK } from 'http-status-codes';
-import ResponseHandler from '../../../shared/ResponseHandler';
-import { schema } from '../../../shared/helpers';
+import { schema, getEnv } from '../../../shared/helpers/helpers';
 import { CreateMainAccount } from '../../../shared/interfaces/CreateMainAccountRequest';
 import { insertDB } from '../../../shared/utils';
+import EmailHandler from '../../../shared/helpers/EmailHandler';
+import ResponseHandler from '../../../shared/helpers/ResponseHandler';
 
-@Controller('api/v1/auth')
+@Controller('api/v1/account')
 export default class AuthenticationController {
-  public SUCCESS_MSG = 'server controller is runnint well';
   private readonly logger: Logger;
   constructor() {
     this.logger = new Logger();
   }
 
-  @Post('dev/register')
+  @Post('register')
   @Middleware(schema(CreateMainAccount).validate)
   private async register(request: Request, response: Response) {
     try {
       const { firstName, lastName, email, role } = request.body;
-      const newUser = await insertDB(User, [
+      const createdUser = await insertDB(User, [
         {
           firstName,
           lastName,
-          email: email.toLocaleLowerCase(),
+          email,
           role,
         },
       ]);
-      console.log(newUser.roas);
-      return new ResponseHandler(response, 1401, newUser);
+      const newUser = createdUser.raw[0];
+      const mailer = await new EmailHandler({
+        from: 'no_reply',
+        to: email,
+        subject: 'welcome to auth.js',
+        template: 'email',
+        context: {
+          heading: `Hi ${firstName} ${lastName}`,
+          hostURL: getEnv('FRONTEND_URL'),
+          body: 'Please, follow this link to activate your account',
+          useButton: true,
+          buttonText: 'ACTIVATE ACCOUNT',
+          buttonURL: `${getEnv('FRONTEND_URL')}/activate/${newUser.id}`,
+          footerText: 'unsubscribe',
+          footerURL: '',
+        },
+      }).send();
+      return new ResponseHandler(
+        response,
+        1402,
+        newUser,
+        'Hi, follow the link sent to your email, to activate your account.'
+      );
     } catch (error) {
       return new ResponseHandler(response, 1501, error.message);
     }
