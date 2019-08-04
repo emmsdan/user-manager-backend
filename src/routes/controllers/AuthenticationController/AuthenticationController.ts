@@ -21,14 +21,8 @@ export default class AuthenticationController {
     try {
       const { firstName, lastName, email, role } = request.body;
       const createdUser = await insertDB(User, [
-        {
-          firstName,
-          lastName,
-          email,
-          role,
-        },
+        { firstName, lastName, email, role },
       ]);
-      const newUser = createdUser.raw[0];
       const mailer = await new EmailHandler({
         from: 'no_reply',
         to: email,
@@ -40,15 +34,15 @@ export default class AuthenticationController {
           body: 'Please, follow this link to activate your account',
           useButton: true,
           buttonText: 'ACTIVATE ACCOUNT',
-          buttonURL: `${getEnv('FRONTEND_URL')}/activate/${newUser.id}`,
-          footerText: 'unsubscribe',
-          footerURL: '',
+          buttonURL: `${getEnv('FRONTEND_URL')}/activate/${
+            createdUser.raw[0].id
+          }`,
         },
       }).send();
       return new ResponseHandler(
         response,
         1402,
-        newUser,
+        createdUser.raw[0],
         'Hi, follow the link sent to your email, to activate your account.'
       );
     } catch (error) {
