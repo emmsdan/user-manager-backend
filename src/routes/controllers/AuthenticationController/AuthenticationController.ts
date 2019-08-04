@@ -20,7 +20,7 @@ export default class AuthenticationController {
   private async register(request: Request, response: Response) {
     try {
       const { firstName, lastName, email, role } = request.body;
-      const createdUser = await insertDB(User, [
+      const { raw } = await insertDB(User, [
         { firstName, lastName, email, role },
       ]);
       const mailer = await new EmailHandler({
@@ -30,19 +30,16 @@ export default class AuthenticationController {
         template: 'email',
         context: {
           heading: `Hi ${firstName} ${lastName}`,
-          hostURL: getEnv('FRONTEND_URL'),
           body: 'Please, follow this link to activate your account',
           useButton: true,
           buttonText: 'ACTIVATE ACCOUNT',
-          buttonURL: `${getEnv('FRONTEND_URL')}/activate/${
-            createdUser.raw[0].id
-          }`,
+          buttonURL: `${getEnv('FRONTEND_URL')}/activate/${raw[0].id}`,
         },
       }).send();
       return new ResponseHandler(
         response,
         1402,
-        createdUser.raw[0],
+        raw[0],
         'Hi, follow the link sent to your email, to activate your account.'
       );
     } catch (error) {
