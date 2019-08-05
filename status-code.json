@@ -52,7 +52,11 @@
     },
     "1207": "Authentication Error, User Not found",
 
-    "1301": "Invalid Credentials",
+    "1301":  {
+      "type": "error",
+      "message": "Invalid credentials.",
+      "statusCode": "422"
+    },
 
     "1310": "Your request is invalid or your request time is over, please try again.",
     "1311": "You are not authorized to access this app",
@@ -69,8 +73,14 @@
       "message": "Account Created.",
       "statusCode": "201"
     },
+    "1501": {
+      "type": "error",
+      "message": "Server Error, Something unexpected happend.",
+      "statusCode": "500"
+    },
 
     "types": {
+      "# 15XX Server Errors": "1501-1509",
       "# 14XX Success": "1401-1409",
       "# 13XX Session Errors": "1301-1322",
       "# 12XX : Auth Erorrs": "1201-1206",
