@@ -5,18 +5,19 @@ export default class ResponseHandler {
    * all the status message
    */
   public statusLibrary() {
-    const filename = `${__dirname}/../../status-code.json`;
+    const filename = `${__dirname}/../../../status-code.json`;
     return JSON.parse(readFileSync(filename, 'utf8'));
   }
 
-  constructor(res: any, status: number, payload: {}) {
+  constructor(res: any, status: number, payload: {}, message='') {
     const response = this.statusLibrary()[status];
+    if (message) { response.message = message; }
     if (response.type !== 'error') {
-      return res
-        .status(response.statusCode)
-        .json(this.success(response, payload));
+      res.status(response.statusCode).json(this.success(response, payload));
+      return;
     }
-    return res.status(response.statusCode).json(this.error(response, payload));
+    res.status(response.statusCode).json(this.error(response, payload));
+    return;
   }
 
   /**
