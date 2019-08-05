@@ -6,7 +6,6 @@ import {
   INTERNAL_SERVER_ERROR,
 } from 'http-status-codes';
 import { SuperTest, Test, agent } from 'supertest';
-import { Logger } from '@overnightjs/logger';
 import { createConnection, Connection } from 'typeorm';
 import faker from 'faker';
 

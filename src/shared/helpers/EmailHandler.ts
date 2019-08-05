@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer';
 import nunjucks from 'nunjucks';
 
 import { getEnv } from './helpers';
-import { Logger } from '@overnightjs/logger';
 
 nunjucks.configure('./src/public/', { autoescape: true });
 
@@ -44,7 +43,6 @@ export default class EmailHandler {
     try {
       return await this.getMailer().sendMail({ ...this.emailOption });
     } catch (error) {
-      Logger.Imp(error, true);
       throw new Error('Server Error: Email could not be sent.');
     }
   }

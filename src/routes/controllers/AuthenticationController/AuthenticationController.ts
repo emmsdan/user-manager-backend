@@ -28,7 +28,6 @@ export default class AuthenticationController {
         raw[0].id,
         `${firstName} ${lastName}`
       );
-      Logger.Info(mailer, true);
       return new ResponseHandler(
         response,
         1402,

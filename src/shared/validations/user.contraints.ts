@@ -5,7 +5,6 @@ import {
 } from 'class-validator';
 import { User } from '../../db/models/User';
 import { getRepository, Equal } from 'typeorm';
-import { Logger } from '@overnightjs/logger';
 
 @ValidatorConstraint({ async: true })
 export class IsUserAlreadyExistConstraint

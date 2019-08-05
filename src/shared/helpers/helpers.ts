@@ -1,7 +1,6 @@
 import { validate } from 'class-validator';
 
 import ResponseHandler from './ResponseHandler';
-import { Logger } from '@overnightjs/logger';
 import { Response, Request } from 'express';
 import { IDynamicObject } from '../interfaces/interfaces';
 
@@ -28,7 +27,6 @@ export function schema(schemaData: any) {
       return validate(serializeSchema, {
         validationError: { target: false },
       }).then((validationResponse) => {
-        Logger.Warn(validationResponse);
         if (validationResponse && validationResponse.length > 0) {
           return new ResponseHandler(
             response,
@@ -54,7 +52,7 @@ function formatValidationError(errors: any) {
 
 export const columnTransformer = {
   from: (value?: string | null) =>
-  value === undefined || value === null ? value : value.toLocaleLowerCase(),
+    value === undefined || value === null ? value : value.toLocaleLowerCase(),
   to: (value?: string | null) =>
-  value === undefined || value === null ? value : value.toLocaleLowerCase(),
+    value === undefined || value === null ? value : value.toLocaleLowerCase(),
 };
