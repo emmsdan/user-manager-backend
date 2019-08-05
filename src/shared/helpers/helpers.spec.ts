@@ -17,12 +17,8 @@ describe('HELPERS Tests', () => {
 
   it('should return null value', (done) => {
     const nullValue = columnTransformer.from(null);
-    expect(nullValue).toBeFalsy();
-    done();
-  });
-
-  it('should return null value', (done) => {
     const isNull = columnTransformer.to(null);
+    expect(nullValue).toBeFalsy();
     expect(isNull).toBeNull();
     done();
   });
