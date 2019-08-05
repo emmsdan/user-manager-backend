@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import nunjucks from 'nunjucks';
 
 import { getEnv } from './helpers';
+import { Logger } from '@overnightjs/logger';
 
 nunjucks.configure('./src/public/', { autoescape: true });
 
@@ -17,14 +18,22 @@ interface IOptions {
 
 export default class EmailHandler {
   private emailOption: {};
-  constructor(public options: IOptions) {
-    const option = {
-      ...options,
-      text: options.body,
-      html: nunjucks.render(`${options.template}.html`, options.context),
-    };
-    delete option.body;
-    this.emailOption = option;
+  private mailReciever: string;
+  private mailText: string;
+  private mailHtml: string;
+  private mailSubject: string;
+  private mailSender: string;
+  constructor(public options?: IOptions) {
+    let option: { [key: string]: any };
+    if (options) {
+      option = {
+        ...options,
+        text: options.body,
+        html: nunjucks.render(`${options.template}.html`, options.context),
+      };
+      delete option.body;
+      this.emailOption = option;
+    }
   }
 
   /**
@@ -34,7 +43,8 @@ export default class EmailHandler {
   public async send() {
     try {
       return await this.getMailer().sendMail({ ...this.emailOption });
-    } catch {
+    } catch (error) {
+      Logger.Imp(error, true);
       throw new Error('Server Error: Email could not be sent.');
     }
   }
@@ -48,5 +58,29 @@ export default class EmailHandler {
         pass: getEnv('SMTP_PASSWORD'),
       },
     });
+  }
+  /**
+   * newAdminTemplate
+   * @param to reciever
+   * @param userId activation url
+   * @param name users name
+   */
+  public newAdminTemplate(to: string, userId: string, name: string) {
+    const context = {
+      heading: `Hi ${name}`,
+      body: 'Please, follow this link to activate your account',
+      useButton: true,
+      buttonText: 'ACTIVATE ACCOUNT',
+      buttonURL: `${getEnv('FRONTEND_URL')}/activate/${userId}`,
+    };
+    const body = nunjucks.render('email.html', context);
+    this.emailOption = {
+      text: body,
+      html: body,
+      subject: 'Welcome to User Manager',
+      to,
+      from: 'no_reply@usermanager.io',
+    };
+    return this.send();
   }
 }

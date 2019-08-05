@@ -23,19 +23,12 @@ export default class AuthenticationController {
       const { raw } = await insertDB(User, [
         { firstName, lastName, email, role },
       ]);
-      const mailer = await new EmailHandler({
-        from: 'no_reply',
-        to: email,
-        subject: 'welcome to auth.js',
-        template: 'email',
-        context: {
-          heading: `Hi ${firstName} ${lastName}`,
-          body: 'Please, follow this link to activate your account',
-          useButton: true,
-          buttonText: 'ACTIVATE ACCOUNT',
-          buttonURL: `${getEnv('FRONTEND_URL')}/activate/${raw[0].id}`,
-        },
-      }).send();
+      const mailer = await new EmailHandler().newAdminTemplate(
+        email,
+        raw[0].id,
+        `${firstName} ${lastName}`
+      );
+      Logger.Info(mailer, true);
       return new ResponseHandler(
         response,
         1402,
