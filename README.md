@@ -11,7 +11,7 @@
 ## DEPENDECIES/TECHNOLOGIES
 - Framework: **Express (typescript version)**
 - Database ORM: **TypeORM**
-- Database: **use any of MySQL / MariaDB / Postgres / CockroachDB / SQLite / Microsoft SQL Server / Oracle / sql.js / MongoDB**
+- Database: **use any of MySQL / MariaDB / Postgres /** ***I would recommend Postgres for best performance***
 - Test Library:
 - CI Tool: **Cirlce CI**
 

@@ -14,6 +14,20 @@ export class IsUserAlreadyExistConstraint
   public validate(email: string, args: ValidationArguments) {
     email = email && email.toLocaleLowerCase();
     return this.user.find({ where: { email } }).then((user) => {
+      return user && user.length > 0;
+    });
+  }
+}
+
+// tslint:disable-next-line: max-classes-per-file
+@ValidatorConstraint({ async: true })
+export class IsNotUserAlreadyExistConstraint
+  implements ValidatorConstraintInterface {
+  private user = getRepository(User);
+
+  public validate(email: string, args: ValidationArguments) {
+    email = email && email.toLocaleLowerCase();
+    return this.user.find({ where: { email } }).then((user) => {
       return !(user && user.length > 0);
     });
   }

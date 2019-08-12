@@ -1,4 +1,5 @@
 import * as bodyParser from 'body-parser';
+import helmet from 'helmet';
 import * as controllers from './routes/controllers';
 import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
@@ -12,6 +13,7 @@ class InitServer extends Server {
   constructor() {
     super(true);
     this.isStarted = false;
+    this.app.use(helmet());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.setupControllers();
