@@ -42,7 +42,7 @@
     },
     "1205": {
       "type": "error",
-      "message": "You are Unauthorized, Please login",
+      "message": "Your account is not activated, please, activate it.",
       "statusCode": "401"
     },
     "1206": {

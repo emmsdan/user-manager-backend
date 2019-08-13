@@ -12,7 +12,11 @@ import faker from 'faker';
 
 import TestServer from '../../../init';
 import AuthenticationController from './AuthenticationController';
-import { getEnv, signToken } from '../../../shared/helpers/helpers';
+import {
+  getEnv,
+  signToken,
+  verifyToken,
+} from '../../../shared/helpers/helpers';
 import { Logger } from '@overnightjs/logger';
 
 let httpAgent: SuperTest<Test>;
@@ -85,7 +89,6 @@ describe('AuthenticationController Tests', () => {
   });
 
   test(`should already be activated.`, async (done) => {
-    delete user.email;
     userInfo.password = '0989gyifugv';
     const response = await httpAgent
       .post(`${API_URL}complete-signup`)
@@ -116,6 +119,27 @@ describe('AuthenticationController Tests', () => {
       .send(userInfo);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe('Invalid token/url, provided.');
+    done();
+  });
+
+  test(`should not send login link to email: not activated`, async (done) => {
+    const response = await httpAgent.post(`${API_URL}login-link`).send(user);
+    expect(response.status).toBe(UNAUTHORIZED);
+    expect(response.body.message).toBe(
+      'Your account is not activated, please, activate it.'
+    );
+    done();
+  });
+
+  test(`should send login link to email`, async (done) => {
+    const { email } = verifyToken(requestToken);
+    const response = await httpAgent
+      .post(`${API_URL}login-link`)
+      .send({ email });
+    expect(response.status).toBe(OK);
+    expect(response.body.message).toBe(
+      'Please check your inbox and click the link.'
+    );
     done();
   });
 });

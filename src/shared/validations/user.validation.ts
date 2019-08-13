@@ -1,7 +1,7 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
-import { IsNotUserAlreadyExistConstraint } from './user.contraints';
+import { IsUserExistConstraint } from './user.contraints';
 
-export function IsNotUserAlreadyExist(validationOptions?: ValidationOptions) {
+export function IsUserExist(validationOptions?: ValidationOptions) {
   // tslint:disable-next-line: ban-types
   return (object: Object, propertyName: string) => {
     registerDecorator({
@@ -9,7 +9,7 @@ export function IsNotUserAlreadyExist(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsNotUserAlreadyExistConstraint,
+      validator: IsUserExistConstraint,
     });
   };
 }

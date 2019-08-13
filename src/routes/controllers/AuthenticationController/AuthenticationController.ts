@@ -6,8 +6,14 @@ import { schema, signToken } from '../../../shared/helpers/helpers';
 import {
   CreateMainAccount,
   CompleteNewRegistration,
+  LoginRequest,
 } from '../../../shared/interfaces/CreateMainAccountRequest';
-import { insertDB, activateUser } from '../../../shared/utils';
+import {
+  insertDB,
+  activateUser,
+  getUser,
+  updateDB,
+} from '../../../shared/utils';
 import EmailHandler from '../../../shared/helpers/EmailHandler';
 import ResponseHandler from '../../../shared/helpers/ResponseHandler';
 import { validateUserToken } from '../../../middlewares/user';
@@ -15,6 +21,7 @@ import { validateUserToken } from '../../../middlewares/user';
 @Controller('api/v1/account')
 export default class AuthenticationController {
   private readonly logger: Logger;
+  private readonly emailMessage = `Please check your inbox and click the link.`;
   constructor() {
     this.logger = new Logger();
   }
@@ -30,7 +37,7 @@ export default class AuthenticationController {
       ]);
       const mailer = await new EmailHandler().newAdminTemplate(
         email,
-        raw[0].id,
+        raw[0].requestToken,
         `${firstName} ${lastName}`
       );
       return new ResponseHandler(
@@ -60,5 +67,28 @@ export default class AuthenticationController {
       ...user,
       ...updatedUser.raw[0],
     });
+  }
+
+  @Post('login-link')
+  @Middleware(schema(LoginRequest).validate)
+  private async oneTimeAccess(request: Request, response: Response) {
+    const { email: userEmail } = request.body;
+    const { email, isActive, firstName, id } = await getUser(userEmail);
+    if (!isActive) {
+      return new ResponseHandler(response, 1205, '');
+    }
+    const requestToken = signToken({ email, firstName, id }, '2 hours');
+    const mailer = await Promise.all([
+      updateDB(User, { requestToken }, { id, email }),
+      new EmailHandler().buttonTemplate({
+        email,
+        name: firstName,
+        subject: 'Login to usermanager.io',
+        body: 'forgot_password',
+        buttonURL: `auto-login/${requestToken}`,
+        buttonText: 'Login to Usermanager.io',
+      }),
+    ]);
+    return new ResponseHandler(response, 1403, '', this.emailMessage);
   }
 }
