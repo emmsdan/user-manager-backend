@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { PasswordManager } from './PasswordManager';
 import { SharedColumns } from './SharedColumns';
 import { UserRole } from '../../shared/constants';
@@ -7,7 +14,7 @@ import { columnTransformer } from '../../shared/helpers/helpers';
 @Entity()
 export class User extends SharedColumns {
   @PrimaryGeneratedColumn('uuid')
-  @OneToMany((type) => PasswordManager, (password) => password.userid)
+  @OneToMany((type) => PasswordManager, (password) => password.id)
   public id: number;
 
   @Column({ default: '' })
@@ -23,6 +30,9 @@ export class User extends SharedColumns {
   })
   public email: string;
 
+  @Column({ default: '' })
+  public company: string;
+
   @Column({
     type: 'text',
     default: 'DEVELOPER',
@@ -31,4 +41,7 @@ export class User extends SharedColumns {
 
   @Column({ default: false })
   public isActive: boolean;
+
+  @Column({ default: '' })
+  public requestToken: string;
 }

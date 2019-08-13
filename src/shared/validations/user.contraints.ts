@@ -7,7 +7,7 @@ import { User } from '../../db/models/User';
 import { getRepository, Equal } from 'typeorm';
 
 @ValidatorConstraint({ async: true })
-export class IsUserAlreadyExistConstraint
+export class IsNotUserAlreadyExistConstraint
   implements ValidatorConstraintInterface {
   private user = getRepository(User);
 

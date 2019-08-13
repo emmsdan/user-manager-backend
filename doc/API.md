@@ -31,7 +31,49 @@
     }
 }
 ```
-#### ERRORS
+
+## Confirm developer/admin account
+### REQUEST
+`\api\v1\account\confirm-signup`
+```Javascript
+{
+  company: 'Emmsdan Inc',
+  password: 'd567/&%$hbsvfga<>el',
+  email: 'raoul.emmsdan@gmail.com',
+  token: '$2b$08$CAjxIQTTqcUjwwpT911lK.q8rFhmHQ/XmsW6rrEKicDFRnnboPOL.',
+}
+```
+### RESPONSES
+#### SUCCESS
+```Javascript
+{
+    "type": "success",
+    "message": "Account Activated. Please, Login.",
+    "statusCode": "200",
+    "data": {
+        "id": "07fbb307-149a-4364-9ce0-dfacfd29b1ac",
+        "updatedAt": "2019-08-08T19:43:50.618Z",
+        "firstName": "Raoul",
+        "lastName": "Gislason",
+        "email": "raoul.emmsdan@gmail.com",
+        "company": "EmmsDan Inc",
+        "role": "DEVELOPER",
+        "isActive": true
+    }
+}
+```
+```
+
+#### GENERIC ERRORS
+
+| **jwt/token error**
+```javascript
+{
+    "type": "error",
+    "message": "Invalid token/url, provided.",
+    "statusCode": "401"
+}
+```
 
 | **validation error**
 ```Javascript
@@ -51,7 +93,7 @@
 | **server error**
 ```Javascript
 {
-    "message": "This is a server error. It's not your failt but the server.",
+    "message": "This is a server error. It's not your fault but the server.",
     "statusCode": "500",
     "errorCode": "1501"
 }

@@ -51,6 +51,11 @@
       "statusCode": "401"
     },
     "1207": "Authentication Error, User Not found",
+    "1208": {
+      "type": "error",
+      "message": "Invalid token/url, provided.",
+      "statusCode": "401"
+    },
 
     "1301":  {
       "type": "error",
@@ -73,12 +78,28 @@
       "message": "Account Created.",
       "statusCode": "201"
     },
+    "1403": {
+      "type": "success",
+      "message": "Please, Login this account has been activated.",
+      "statusCode": "200"
+    },
+    "1404": {
+      "type": "success",
+      "message": "Your account has been activated. Start Building.",
+      "statusCode": "200"
+    },
+
+
     "1501": {
       "type": "error",
       "message": "Server Error, Something unexpected happend.",
       "statusCode": "500"
     },
-
+    "1502": {
+      "type": "error",
+      "message": "Resource already exist.",
+      "statusCode": "409"
+    },
     "types": {
       "# 15XX Server Errors": "1501-1509",
       "# 14XX Success": "1401-1409",
