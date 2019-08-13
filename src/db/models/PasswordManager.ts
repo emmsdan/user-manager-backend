@@ -6,6 +6,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
   AfterLoad,
+  ManyToOne,
 } from 'typeorm';
 import { User } from './User';
 import { SharedColumns } from './SharedColumns';
@@ -17,6 +18,7 @@ export class PasswordManager extends SharedColumns {
     type: 'uuid',
     unique: true,
   })
+  @ManyToOne((type) => User, (user) => user.id)
   public id: number;
 
   @Column()

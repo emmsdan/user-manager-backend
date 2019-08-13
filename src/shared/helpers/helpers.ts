@@ -39,10 +39,6 @@ export function verifyToken(token: string): any {
   }
 }
 
-export async function getUserFromToken(token: string) {
-  const { email } = await verifyToken(token);
-  return await getUser(email);
-}
 /**
  * inputValidator()
  * @description used to validate incoming input requests

@@ -48,7 +48,7 @@
 ```Javascript
 {
     "type": "success",
-    "message": "Your account has been activated. Start Building.",
+    "message": "Account Activated. Please, Login.",
     "statusCode": "200",
     "data": {
         "id": "07fbb307-149a-4364-9ce0-dfacfd29b1ac",
@@ -62,14 +62,6 @@
     }
 }
 ```
-#### ALREADY CONFIRMED
-```Javascript
-{
-    "type": "success",
-    "message": "Please, Login this account is already activated.",
-    "statusCode": "200",
-    "data": {}
-}
 ```
 
 #### GENERIC ERRORS

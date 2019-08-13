@@ -4,6 +4,7 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { PasswordManager } from './PasswordManager';
 import { SharedColumns } from './SharedColumns';
@@ -13,6 +14,7 @@ import { columnTransformer } from '../../shared/helpers/helpers';
 @Entity()
 export class User extends SharedColumns {
   @PrimaryGeneratedColumn('uuid')
+  @OneToMany((type) => PasswordManager, (password) => password.id)
   public id: number;
 
   @Column({ default: '' })

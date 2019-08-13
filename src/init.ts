@@ -4,6 +4,9 @@ import { LoggerModes, Logger } from '@overnightjs/logger';
 import { unlinkSync } from 'fs';
 import { getEnv } from './shared/helpers/helpers';
 
+if (getEnv('NODE_ENV') === 'test') {
+  process.env.TYPEORM_LOGGING = 'false';
+}
 const server = new InitServer();
 
 const logFilePath = `../logs/${new Date().getTime()}-api-error.log`;

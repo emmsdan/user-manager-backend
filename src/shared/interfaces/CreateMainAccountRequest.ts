@@ -7,10 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-import {
-  IsUserAlreadyExist,
-  IsNotUserAlreadyExist,
-} from '../validations/user.validation';
+import { IsNotUserAlreadyExist } from '../validations/user.validation';
 import { UserRole } from '../constants';
 import { User } from 'src/db/models/User';
 
@@ -36,11 +33,7 @@ export class CreateMainAccount {
 }
 
 // tslint:disable-next-line: max-classes-per-file
-export class ConfirmNewRegistration {
-  @IsNotEmpty()
-  @MinLength(10)
-  public token: string;
-
+export class CompleteNewRegistration {
   @IsNotEmpty()
   public company: string;
 

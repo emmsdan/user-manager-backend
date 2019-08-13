@@ -2,22 +2,15 @@ import { Request, Response } from 'express';
 import { Controller, Get, Post, Middleware } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { User } from '../../../db/models/User';
-import {
-  schema,
-  hash,
-  signToken,
-  verifyToken,
-  getUserFromToken,
-} from '../../../shared/helpers/helpers';
+import { schema, signToken } from '../../../shared/helpers/helpers';
 import {
   CreateMainAccount,
-  ConfirmNewRegistration,
+  CompleteNewRegistration,
 } from '../../../shared/interfaces/CreateMainAccountRequest';
-import { insertDB, updateDB, getUser } from '../../../shared/utils';
+import { insertDB, activateUser } from '../../../shared/utils';
 import EmailHandler from '../../../shared/helpers/EmailHandler';
 import ResponseHandler from '../../../shared/helpers/ResponseHandler';
-import { PasswordManager } from '../../../db/models/PasswordManager';
-import { getConnection } from 'typeorm';
+import { validateUserToken } from '../../../middlewares/user';
 
 @Controller('api/v1/account')
 export default class AuthenticationController {
@@ -51,28 +44,21 @@ export default class AuthenticationController {
     }
   }
 
-  @Post('activate')
-  @Middleware(schema(ConfirmNewRegistration).validate)
-  private async confirmRegistration(request: Request, response: Response) {
-    const { company, password, token } = request.body;
-    try {
-      let user = await getUserFromToken(token);
-      if (!user.isActive && token === user.requestToken) {
-        await insertDB(PasswordManager, [
-          { currentPassword: await hash(password), id: user.id },
-        ]);
-        const { raw } = await updateDB(
-          User,
-          { isActive: true, company, requestToken: '' },
-          { id: user.id, email: user.email }
-        );
-        user = { ...user, ...raw[0] };
-      } else {
-        user = {};
-      }
-      return new ResponseHandler(response, !user.company ? 1403 : 1404, user);
-    } catch ({ statusCode, message }) {
-      return new ResponseHandler(response, statusCode || 1501, message);
+  @Post('complete-signup')
+  @Middleware([schema(CompleteNewRegistration).validate, validateUserToken])
+  private async completeRegistration(request: Request, response: Response) {
+    const { validatedUser, user } = request.body;
+    const { isActive, requestToken, accessToken } = validatedUser;
+    if (isActive) {
+      return new ResponseHandler(response, 1403, {});
     }
+    if (accessToken !== requestToken) {
+      return new ResponseHandler(response, 1208, {});
+    }
+    const [, updatedUser] = await activateUser(validatedUser);
+    return new ResponseHandler(response, 1404, {
+      ...user,
+      ...updatedUser.raw[0],
+    });
   }
 }

@@ -80,7 +80,7 @@
     },
     "1403": {
       "type": "success",
-      "message": "Please, Login this account is already activated.",
+      "message": "Please, Login this account has been activated.",
       "statusCode": "200"
     },
     "1404": {
