@@ -1,3 +1,5 @@
+// tslint:disable: max-classes-per-file
+
 import {
   IsEmail,
   IsEnum,
@@ -5,9 +7,10 @@ import {
   IsNotEmpty,
   Matches,
   MinLength,
+  IsOptional,
 } from 'class-validator';
 
-import { IsNotUserAlreadyExist } from '../validations/user.validation';
+import { IsUserExist } from '../validations/user.validation';
 import { UserRole } from '../constants';
 import { User } from 'src/db/models/User';
 
@@ -22,7 +25,7 @@ export class CreateMainAccount {
 
   @IsNotEmpty()
   @IsEmail()
-  @IsNotUserAlreadyExist({
+  @IsUserExist({
     message: 'A user with this email already exist.',
   })
   public email: string;
@@ -38,5 +41,14 @@ export class CompleteNewRegistration {
   public company: string;
 
   @MinLength(5)
+  public password: string;
+}
+
+export class LoginRequest {
+  @IsNotEmpty()
+  @IsEmail()
+  public email: string;
+
+  @IsOptional()
   public password: string;
 }

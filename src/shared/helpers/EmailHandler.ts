@@ -28,7 +28,9 @@ export default class EmailHandler {
       option = {
         ...options,
         text: options.body,
-        html: nunjucks.render(`${options.template}.html`, options.context),
+        html: options.template
+          ? nunjucks.render(`${options.template}.html`, options.context)
+          : options.html,
       };
       delete option.body;
       this.emailOption = option;
@@ -57,6 +59,7 @@ export default class EmailHandler {
       },
     });
   }
+
   /**
    * newAdminTemplate
    * @param to reciever
@@ -78,6 +81,28 @@ export default class EmailHandler {
       subject: 'Welcome to User Manager',
       to,
       from: 'no_reply@usermanager.io',
+    };
+    return this.send();
+  }
+
+  /**
+   * buttonTemplate
+   */
+  public buttonTemplate(options: any) {
+    const { name, email, buttonText, buttonURL, body, subject } = options;
+    const context = {
+      heading: `Hi, ${name}`,
+      body,
+      useButton: true,
+      buttonURL,
+      buttonText,
+    };
+    this.emailOption = {
+      to: email,
+      from: 'no_reply@usermanager.io',
+      subject,
+      text: body,
+      html: nunjucks.render('email.html', context),
     };
     return this.send();
   }
