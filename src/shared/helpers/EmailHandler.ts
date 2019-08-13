@@ -16,6 +16,9 @@ interface IOptions {
 }
 
 export default class EmailHandler {
+  private emailBody = `Hello! Here's the link you requested from usermanager.io \n\n <br/> \n
+  For extra security, the link can only be used one time and expires in two hours time.`;
+
   private emailOption: {};
   private mailReciever: string;
   private mailText: string;
@@ -88,22 +91,27 @@ export default class EmailHandler {
   /**
    * buttonTemplate
    */
-  public buttonTemplate(options: any) {
-    const { name, email, buttonText, buttonURL, body, subject } = options;
-    const context = {
-      heading: `Hi, ${name}`,
-      body,
-      useButton: true,
-      buttonURL,
-      buttonText,
-    };
-    this.emailOption = {
-      to: email,
-      from: 'no_reply@usermanager.io',
-      subject,
-      text: body,
-      html: nunjucks.render('email.html', context),
-    };
-    return this.send();
+  public async buttonTemplate(options: any) {
+    try {
+      const { name, email, buttonText, buttonURL, body, subject } = options;
+      const ebody = body === 'forgot_password' ? this.emailBody : body;
+      const context = {
+        heading: `Hi, ${name}`,
+        body: ebody,
+        useButton: true,
+        buttonURL,
+        buttonText,
+      };
+      this.emailOption = {
+        to: email,
+        from: 'no_reply@usermanager.io',
+        subject,
+        text: ebody,
+        html: nunjucks.render('email.html', context),
+      };
+      return await this.send();
+    } catch ({ message }) {
+      return message;
+    }
   }
 }

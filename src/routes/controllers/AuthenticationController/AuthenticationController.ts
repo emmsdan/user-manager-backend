@@ -72,28 +72,23 @@ export default class AuthenticationController {
   @Post('login-link')
   @Middleware(schema(LoginRequest).validate)
   private async oneTimeAccess(request: Request, response: Response) {
-    try {
-      const { email: userEmail } = request.body;
-      const { email, isActive, firstName, id } = await getUser(userEmail);
-      if (!isActive) {
-        return new ResponseHandler(response, 1205, '');
-      }
-      const requestToken = signToken({ email, name, id }, '2 hours');
-      const [, mail] = await Promise.all([
-        updateDB(User, { requestToken }, { id, email }),
-        new EmailHandler().buttonTemplate({
-          email,
-          name: firstName,
-          subject: 'Login to usermanager.io',
-          body: `Hello! Here's the link you requested from usermanager.io \n\n <br/> \n
-            For extra security, the link can only be used one time and expires in two hours time.`,
-          buttonURL: `auto-login/${requestToken}`,
-          buttonText: 'Login to Usermanager.io',
-        }),
-      ]);
-      return new ResponseHandler(response, 1403, '', this.emailMessage);
-    } catch ({ message }) {
-      return new ResponseHandler(response, 1501, message);
+    const { email: userEmail } = request.body;
+    const { email, isActive, firstName, id } = await getUser(userEmail);
+    if (!isActive) {
+      return new ResponseHandler(response, 1205, '');
     }
+    const requestToken = signToken({ email, firstName, id }, '2 hours');
+    const mailer = await Promise.all([
+      updateDB(User, { requestToken }, { id, email }),
+      new EmailHandler().buttonTemplate({
+        email,
+        name: firstName,
+        subject: 'Login to usermanager.io',
+        body: 'forgot_password',
+        buttonURL: `auto-login/${requestToken}`,
+        buttonText: 'Login to Usermanager.io',
+      }),
+    ]);
+    return new ResponseHandler(response, 1403, '', this.emailMessage);
   }
 }
