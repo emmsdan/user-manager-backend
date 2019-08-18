@@ -61,6 +61,7 @@ describe('AuthenticationController Tests', () => {
   test(`should register a new user`, async (done) => {
     user.role = 'DEVELOPER';
     const response = await httpAgent.post(`${API_URL}register`).send(user);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(CREATED);
     expect(response.body.data).toMatchObject(user);
     expect(response.body.message).toBe(
@@ -75,6 +76,7 @@ describe('AuthenticationController Tests', () => {
     user.email = faker.internet.email().toLocaleLowerCase();
     process.env.SMTP_HOST = 'none';
     const response = await httpAgent.post(`${API_URL}register`).send(user);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(INTERNAL_SERVER_ERROR);
     expect(response.body.error).toBe('Server Error: Email could not be sent.');
     done();
@@ -85,6 +87,7 @@ describe('AuthenticationController Tests', () => {
       .set('accessToken', requestToken)
       .send(userInfo);
     delete userInfo.password;
+    Logger.Err(response.body, true);
     expect(response.status).toBe(OK);
     expect(response.body.data).toMatchObject(userInfo);
     expect(response.body.data.lastName).toBe(user.lastName);
@@ -98,6 +101,7 @@ describe('AuthenticationController Tests', () => {
       .post(`${API_URL}complete-signup`)
       .set('accessToken', requestToken)
       .send(userInfo);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(OK);
     expect(response.body.data).toEqual({});
     expect(response.body.message).toBe(
@@ -111,6 +115,7 @@ describe('AuthenticationController Tests', () => {
       .post(`${API_URL}complete-signup`)
       .set('accessToken', ' faker.internet')
       .send(userInfo);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe('Invalid token/url, provided.');
     done();
@@ -121,6 +126,7 @@ describe('AuthenticationController Tests', () => {
       .post(`${API_URL}complete-signup`)
       .set('accessToken', signToken({ email: faker.internet.email() }))
       .send(userInfo);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe('Invalid token/url, provided.');
     done();
@@ -128,6 +134,7 @@ describe('AuthenticationController Tests', () => {
 
   test(`should not send login link to email: not activated`, async (done) => {
     const response = await httpAgent.post(`${API_URL}login-reset`).send(user);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe(
       'Your account is not activated, please, activate it.'
@@ -140,6 +147,7 @@ describe('AuthenticationController Tests', () => {
     const response = await httpAgent
       .post(`${API_URL}login-reset`)
       .send({ email, path: 'auto-login' });
+    Logger.Err(response.body, true);
     expect(response.status).toBe(OK);
     expect(response.body.message).toBe(
       'Please check your inbox and click the link.'
@@ -153,6 +161,7 @@ describe('AuthenticationController Tests', () => {
       .post(`${API_URL}change-password`)
       .set('accessToken', invalidToken)
       .send({ password: faker.internet.password(7) });
+    Logger.Err(response.body, true);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe('Invalid token/url, provided.');
     done();
@@ -163,6 +172,7 @@ describe('AuthenticationController Tests', () => {
       .post(`${API_URL}change-password`)
       .send({ password: 'faker.internet.password' })
       .set('accessToken', requestToken);
+    Logger.Err(response.body, true);
     expect(response.status).toBe(OK);
     expect(response.body.message).toBe(
       'Your password has been changed successfully.'
@@ -175,6 +185,7 @@ describe('AuthenticationController Tests', () => {
       .post(`${API_URL}change-password`)
       .set('accessToken', requestToken)
       .send({ password: 'faker.internet.password(6)' });
+    Logger.Err(response.body, true);
     expect(response.status).toBe(OK);
     expect(response.body.message).toBe(
       "You can't use your current or last 2 password."
