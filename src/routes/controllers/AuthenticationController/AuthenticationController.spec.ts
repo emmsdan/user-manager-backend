@@ -161,8 +161,8 @@ describe('AuthenticationController Tests', () => {
   test(`should  change password`, async (done) => {
     const response = await httpAgent
       .post(`${API_URL}change-password`)
-      .set('accessToken', requestToken)
-      .send({ password: faker.internet.password(7) });
+      .send({ password: 'faker.internet.password' })
+      .set('accessToken', requestToken);
     expect(response.status).toBe(OK);
     expect(response.body.message).toBe(
       'Your password has been changed successfully.'
