@@ -34,10 +34,14 @@ describe('AuthenticationController Tests', () => {
 
   const userInfo = {
     company: faker.random.words(3),
-    password: faker.internet.password(6),
+    password: `faker.internet.password(6)`,
   };
-
+  const invalidToken = signToken({
+    email: faker.internet.exampleEmail(),
+    type: 'signup-dev',
+  });
   let requestToken = signToken({ email: user.email, type: 'signup-dev' });
+
   beforeAll(async (done) => {
     httpAgent = await agent(server.getExpressInstance());
     mockConnection = await createConnection();
@@ -105,7 +109,7 @@ describe('AuthenticationController Tests', () => {
   test(`access token should be invalid`, async (done) => {
     const response = await httpAgent
       .post(`${API_URL}complete-signup`)
-      .set('accessToken', 'signToken({ email: faker.internet.email() })')
+      .set('accessToken', ' faker.internet')
       .send(userInfo);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe('Invalid token/url, provided.');
@@ -123,7 +127,7 @@ describe('AuthenticationController Tests', () => {
   });
 
   test(`should not send login link to email: not activated`, async (done) => {
-    const response = await httpAgent.post(`${API_URL}login-link`).send(user);
+    const response = await httpAgent.post(`${API_URL}login-reset`).send(user);
     expect(response.status).toBe(UNAUTHORIZED);
     expect(response.body.message).toBe(
       'Your account is not activated, please, activate it.'
@@ -134,11 +138,46 @@ describe('AuthenticationController Tests', () => {
   test(`should send login link to email`, async (done) => {
     const { email } = verifyToken(requestToken);
     const response = await httpAgent
-      .post(`${API_URL}login-link`)
-      .send({ email });
+      .post(`${API_URL}login-reset`)
+      .send({ email, path: 'auto-login' });
     expect(response.status).toBe(OK);
     expect(response.body.message).toBe(
       'Please check your inbox and click the link.'
+    );
+    requestToken = response.body.data.requestToken;
+    done();
+  });
+
+  test(`should not change password: invalid token`, async (done) => {
+    const response = await httpAgent
+      .post(`${API_URL}change-password`)
+      .set('accessToken', invalidToken)
+      .send({ password: faker.internet.password(7) });
+    expect(response.status).toBe(UNAUTHORIZED);
+    expect(response.body.message).toBe('Invalid token/url, provided.');
+    done();
+  });
+
+  test(`should  change password`, async (done) => {
+    const response = await httpAgent
+      .post(`${API_URL}change-password`)
+      .set('accessToken', requestToken)
+      .send({ password: faker.internet.password(7) });
+    expect(response.status).toBe(OK);
+    expect(response.body.message).toBe(
+      'Your password has been changed successfully.'
+    );
+    done();
+  });
+
+  test(`should  can't reuse password`, async (done) => {
+    const response = await httpAgent
+      .post(`${API_URL}change-password`)
+      .set('accessToken', requestToken)
+      .send({ password: 'faker.internet.password(6)' });
+    expect(response.status).toBe(OK);
+    expect(response.body.message).toBe(
+      "You can't use your current or last 2 password."
     );
     done();
   });

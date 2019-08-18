@@ -51,4 +51,7 @@ export class LoginRequest {
 
   @IsOptional()
   public password: string;
+
+  @IsOptional()
+  public path: string;
 }

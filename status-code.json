@@ -51,6 +51,7 @@
       "statusCode": "401"
     },
     "1207": "Authentication Error, User Not found",
+
     "1208": {
       "type": "error",
       "message": "Invalid token/url, provided.",
@@ -67,6 +68,11 @@
     "1311": "You are not authorized to access this app",
 
     "1312": "An issue in the Active Directory Service, please contat the Administrator",
+    "1303": {
+      "type": "error",
+      "message": "You can't use your current or last 2 password.",
+      "statusCode": "200"
+    },
 
     "1401": {
       "type": "success",
@@ -86,6 +92,11 @@
     "1404": {
       "type": "success",
       "message": "Your account has been activated. Start Building.",
+      "statusCode": "200"
+    },
+    "1405": {
+      "type": "success",
+      "message": "Your password has been changed successfully.",
       "statusCode": "200"
     },
 
