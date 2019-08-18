@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Controller, Get, Post, Middleware } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { User } from '../../../db/models/User';
-import { schema, signToken } from '../../../shared/helpers/helpers';
+import { schema, signToken, hash } from '../../../shared/helpers/helpers';
 import {
   CreateMainAccount,
   CompleteNewRegistration,
@@ -13,10 +13,13 @@ import {
   activateUser,
   getUser,
   updateDB,
+  getTableById,
 } from '../../../shared/utils';
 import EmailHandler from '../../../shared/helpers/EmailHandler';
 import ResponseHandler from '../../../shared/helpers/ResponseHandler';
 import { validateUserToken } from '../../../middlewares/user';
+import { PasswordManager } from '../../../db/models/PasswordManager';
+import { compareSync } from 'bcrypt';
 
 @Controller('api/v1/account')
 export default class AuthenticationController {
@@ -69,10 +72,10 @@ export default class AuthenticationController {
     });
   }
 
-  @Post('login-link')
+  @Post('login-reset')
   @Middleware(schema(LoginRequest).validate)
   private async oneTimeAccess(request: Request, response: Response) {
-    const { email: userEmail } = request.body;
+    const { email: userEmail, path } = request.body;
     const { email, isActive, firstName, id } = await getUser(userEmail);
     if (!isActive) {
       return new ResponseHandler(response, 1205, '');
@@ -85,10 +88,38 @@ export default class AuthenticationController {
         name: firstName,
         subject: 'Login to usermanager.io',
         body: 'forgot_password',
-        buttonURL: `auto-login/${requestToken}`,
+        buttonURL: `${path}/${requestToken}`,
         buttonText: 'Login to Usermanager.io',
       }),
     ]);
-    return new ResponseHandler(response, 1403, '', this.emailMessage);
+    const res = { requestToken };
+    return new ResponseHandler(response, 1403, res, this.emailMessage);
+  }
+
+  @Post('change-password')
+  @Middleware([validateUserToken])
+  private async changePassword(request: Request, response: Response) {
+    const { validatedUser, password } = request.body;
+    const { requestToken, accessToken, id } = validatedUser;
+    if (requestToken !== accessToken) {
+      return new ResponseHandler(response, 1208, '');
+    }
+    const pass = await getTableById(PasswordManager, id);
+    const hashedPass = await hash(password);
+    const currentPassword = compareSync(password, pass.currentPassword);
+    const lastPassword = compareSync(password, pass.lastPassword);
+
+    if (currentPassword || lastPassword) {
+      return new ResponseHandler(response, 1303, '');
+    }
+    await updateDB(
+      PasswordManager,
+      {
+        lastPassword: pass.currentPassword,
+        currentPassword: hashedPass,
+      },
+      { id }
+    );
+    return new ResponseHandler(response, 1405, '');
   }
 }

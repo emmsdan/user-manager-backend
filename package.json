@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build-nobuild": "'rm -rf ./build/ && tsc'",
+    "build-nobuild": "'rm -rf build/ && tsc'",
     "docker": "docker build --tag=user-manager-backend .",
     "lint": "tslint --project \"tsconfig.json\"",
     "start": "npm run start-dev",

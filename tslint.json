@@ -15,11 +15,15 @@
     "whitespace":false,
     "deprecation": true,
     "no-duplicate-imports":true,
-    "indent":false,
+    "indent":true,
     "prefer-template":true,
     "no-redundant-jsdoc":true,
     "jsdoc-format": true,
-    "triple-equals": true
+    "triple-equals": true,
+    "class-name": true,
+    "max-file-line-count":true,
+    "file-name-casing":[ true, { ".ts":  "camel-case" }],
+    "max-lines-per-function": 24
   },
   "linterOptions": {
     "exclude": [

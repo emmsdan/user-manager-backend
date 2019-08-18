@@ -4,7 +4,7 @@
 
 ## Create a developer/admin account
 ### REQUEST
-`\api\v1\account\register`
+`POST`:  `\api\v1\account\register`
 ```Javascript
 {
   firstName: 'emmanuel', \\ alphabets only,
@@ -34,7 +34,7 @@
 
 ## Confirm developer/admin account
 ### REQUEST
-`\api\v1\account\confirm-signup`
+`POST`: `\api\v1\account\confirm-signup`
 ```Javascript
 {
   company: 'Emmsdan Inc',
@@ -62,6 +62,75 @@
     }
 }
 ```
+
+## Forgot Password
+### REQUEST 
+`POST`: `\api\v1\account\login-reset`
+```Javascript
+{
+  email: 'raoul.emmsdan@gmail.com',
+}
+```
+### RESPONSES
+#### SUCCESS
+```Javascript
+{
+    "type": "success",
+    "message": "Please check your inbox and click the link.",
+    "statusCode": "200",
+}
+```
+
+## Request One Time Login
+### REQUEST 
+`POST`: `\api\v1\account\login-reset`
+```Javascript
+{
+    email: 'raoul.emmsdan@gmail.com',
+}
+```
+### RESPONSES
+#### SUCCESS
+```Javascript
+{
+    "type": "success",
+    "message": "Please check your inbox and click the link.",
+    "statusCode": "200",
+}
+```
+
+## Change Password
+### HEADERS 
+`POST`: `\api\v1\account\change-password`
+```Javascript
+{
+    accessToken: 'iofnwionj3reoivreinf.fgindsfjkdsnflksdfds.ffo3ur', // from email url
+}
+```
+### REQUEST 
+`POST`: `\api\v1\account\change-password`
+```Javascript
+{
+    password: '9djin23jn',
+}
+```
+### RESPONSES
+#### SUCCESS
+```Javascript
+{
+    "type": "success",
+    "message": "Your password has been changed successfully.",
+    "statusCode": "200",
+}
+```
+#### ERRORS
+```Javascript
+{
+    "type": "error",
+    "message": "You can't use your current or last 2 password.",
+    "statusCode": "200",
+    "error": ""
+}
 ```
 
 #### GENERIC ERRORS

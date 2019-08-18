@@ -45,10 +45,23 @@ export async function updateDB(model: any, data: any, where: any) {
  * @param email string
  */
 export async function getUser(email: string): Promise<any> {
+  const where = { where: { email } };
   return await getRepository(User)
-    .find({ where: { email } })
-    .then((user) => {
-      return user[0];
+    .findOne(where)
+    .then((user) => user);
+}
+
+/**
+ * getTableById
+ * @description get user with this email
+ * @param model Table Entities
+ * @param email string
+ */
+export async function getTableById(model: any, id: string): Promise<any> {
+  return await getRepository(model)
+    .find({ where: { id } })
+    .then((response) => {
+      return response[0];
     });
 }
 
